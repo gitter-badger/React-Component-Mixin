@@ -2,6 +2,10 @@ define(['underscore'], function (_) {
 	return ReactBase = {
 		eventListeners: [],
 		componentWillMount: function () {
+			if (this.initialize) {
+				this.initialize();
+			}
+
 			if (this.beforeRender) {
 				this.beforeRender();
 			}
@@ -17,15 +21,16 @@ define(['underscore'], function (_) {
 			var that = this;
 
 			if (this.initialize) {
-				this.initialize();
 				_.each(this.eventListeners, function (listen) {
 					if (listen.length > 1) {
-						var events = listen[0];
+						var events = listen[0],
+							model = listen[1],
+							handler = listen[2];
 
 						if (listen.length === 3) {
-							listen[1].on(events, listen[2], that);
+							model && model.on(events, handler, that);
 						} else {
-							listen[1].on(events, that._renderComp, that);
+							model && model.on(events, that._renderComp, that);
 						}
 					}
 				});
@@ -39,33 +44,36 @@ define(['underscore'], function (_) {
 			var that = this;
 
 			if (this.initialize) {
-				this.initialize();
 				_.each(this.eventListeners, function (listen) {
 					if (listen.length > 1) {
-						var events = listen[0];
+						var events = listen[0],
+							model = listen[1],
+							handler = listen[2];
 
 						if (listen.length === 3) {
-							listen[1].off(events, listen[2], that);
+							model && model.off(events, handler, that);
 						} else {
-							listen[1].off(events, that._renderComp, that);
+							model && model.off(events, that._renderComp, that);
 						}
 					}
 				});
 			}
 		},
 		_renderComp: function () {
+			var that = this;
+
 			if (this.beforeRender) {
 				this.beforeRender();
 			}
 
-			var that = this;
-			this.forceUpdate(function () {
-				if (that.afterRender) {
-					that.afterRender();
-				}
-			});
+			if (this.isMounted()) {
+				this.forceUpdate(function () {
+					if (that.afterRender) {
+						that.afterRender();
+					}
+				});
+			}
 		}
 	};
 
 });
-
