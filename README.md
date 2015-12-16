@@ -1,6 +1,8 @@
 React Component Mixin
 =====================
 
+[![Join the chat at https://gitter.im/Redmart/React-Component-Mixin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Redmart/React-Component-Mixin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Organize your React components similar to how layout manager does.
 
 ### Currently available functions are ###
